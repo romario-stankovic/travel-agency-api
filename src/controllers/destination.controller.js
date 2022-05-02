@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const destinationService = require("../services/destination.service");
+const reviewService = require("../services/review.service");
 const apiResponse = require("../misc/api.response");
 
 router.get("/destination/topRated", async (req, res) => {
@@ -21,12 +22,21 @@ router.get("/destination/", async (req, res) => {
     }
 })
 
+router.get("/destination/review", async (req, res) => {
+    let reviews = await reviewService.getByDestinationId(req.query.id);
+    if(reviews.length === 0){
+        res.json(apiResponse.NULL_ENTRY);
+    }else{
+        res.json(reviews);
+    }
+})
+
 router.post("/destination/review", async (req, res) => {
-    let updateResponse = await destinationService.addReview(req.query.id, req.body.score);
+    let updateResponse = await reviewService.add(req.body.user_id, req.body.destination_id, req.body.score, req.body.text);
     if(updateResponse == undefined){
         res.json(apiResponse.CREATE_FAILED);
     }else{
-        res.json(apiResponse.OK);
+        res.json(updateResponse);
     }
 });
 
