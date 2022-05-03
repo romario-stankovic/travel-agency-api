@@ -36,7 +36,7 @@ async function create(name, lastName, email, password){
     return newUser;
 }
 
-async function update(id, name, lastName, email, password) {
+async function update(id, name, lastName, email) {
     if(!mongoose.isValidObjectId(id)){
         return null;
     }
@@ -45,13 +45,13 @@ async function update(id, name, lastName, email, password) {
         return null;
     }
 
-    let hash = crypto.createHash("sha512");
-    let hashedPassword = hash.update(password).digest("hex");
+    /* let hash = crypto.createHash("sha512");
+    let hashedPassword = hash.update(password).digest("hex"); */
     return await model.findByIdAndUpdate(id, {
         name: name,
         lastName: lastName,
         email:email,
-        password: hashedPassword
+        /* password: hashedPassword */
     }, {new: true});
 }
 

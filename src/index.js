@@ -7,6 +7,7 @@ const userController = require("./controllers/user.controller").controller;
 const destinationController = require("./controllers/destination.controller").controller;
 const faqController = require("./controllers/faq.controller").controller;
 const motdController = require("./controllers/motd.controller").controller;
+const bookingController = require("./controllers/booking.controller").controller;
 
 const port = 4000;
 
@@ -27,6 +28,7 @@ async function main() {
     app.use(destinationController);
     app.use(faqController);
     app.use(motdController);
+    app.use(bookingController);
 
     app.listen(port, () => {
         console.log(`Server running and listening on port: ${port}`);

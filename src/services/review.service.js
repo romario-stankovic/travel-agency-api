@@ -8,34 +8,35 @@ async function getByDestinationId (id) {
         return [];
     }
     return await model.aggregate([
-        {$match: {"_id": mongoose.Types.ObjectId(id)}},
+        {$match: {"destinationId": mongoose.Types.ObjectId(id)}},
         {$lookup: {
             from: "users",
-            localField: "user_id",
+            localField: "userId",
             foreignField: "_id",
             as: "from"
         }},
         {$project: {
             "_id": "$_id",
             "from": {$first: "$from"},
-            "destination_id": "$destination_id",
+            "destinationId": "$destinationId",
             "score": "$score",
             "text": "$text"
-        }}
+        }},
+        {$sort: {_id: -1}}
     ])
 }
 
-async function add(user_id, destination_id, score, text){
-    if(!mongoose.isObjectIdOrHexString(user_id)){
+async function add(userId, destinationId, score, text){
+    if(!mongoose.isObjectIdOrHexString(userId)){
         return null;
     }
-    if(!mongoose.isObjectIdOrHexString(destination_id)){
+    if(!mongoose.isObjectIdOrHexString(destinationId)){
         return null;
     }
-
+    
     return await model.create({
-        user_id: user_id,
-        destination_id: destination_id,
+        userId: userId,
+        destinationId: destinationId,
         score: score,
         text: text
     });

@@ -8,7 +8,7 @@ async function getTopRated(){
         {$lookup: {
             from: "reviews",
             localField: "_id",
-            foreignField: "destination_id",
+            foreignField: "destinationId",
             as: "reviews",
             pipeline:[
                 {$group: {
@@ -42,7 +42,7 @@ async function getById(id){
         {$lookup: {
             from: "reviews",
             localField: "_id",
-            foreignField: "destination_id",
+            foreignField: "destinationId",
             as: "reviews",
             pipeline:[
                 {$group: {
