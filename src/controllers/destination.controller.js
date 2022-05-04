@@ -23,6 +23,15 @@ router.get("/destination/", async (req, res) => {
     }
 })
 
+router.post("/destination/filter", async (req, res) => {
+    let destinations = await destinationService.filterDestinations(req.body.filters);
+    if(destinations.length === 0){
+        res.json(apiResponse.NULL_ENTRY);
+    }else{
+        res.json(destinations);
+    }
+})
+
 router.get("/destination/review", async (req, res) => {
     let reviews = await reviewService.getByDestinationId(req.query.id);
     if(reviews.length === 0){

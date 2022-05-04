@@ -64,5 +64,64 @@ async function getById(id){
     return destination[0];
 }
 
+async function filter(filters){
+    if(filters.length === 0){
+        let destinations = await model.aggregate([
+            {$lookup: {
+                from: "reviews",
+                localField: "_id",
+                foreignField: "destinationId",
+                as: "reviews",
+                pipeline:[
+                    {$group: {
+                        "_id": "temp",
+                        "count": {$count: {}},
+                        "avg": {$avg:"$score"}
+                    }}
+                ]
+            }},
+            {$project: {
+                "_id": "$_id",
+                "name": "$name",
+                "description": "$description",
+                "imageUrl": "$imageUrl",
+                "score": {$ifNull: [{$first: "$reviews.avg"}, 0]},
+                "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]}
+            }},
+            {$limit: 10}
+        ])
+        return destinations;
+    }
+
+    let destinations = await model.aggregate([
+        {$match: {categories: {$all: filters}}},
+        {$lookup: {
+            from: "reviews",
+            localField: "_id",
+            foreignField: "destinationId",
+            as: "reviews",
+            pipeline:[
+                {$group: {
+                    "_id": "temp",
+                    "count": {$count: {}},
+                    "avg": {$avg:"$score"}
+                }}
+            ]
+        }},
+        {$project: {
+            "_id": "$_id",
+            "name": "$name",
+            "description": "$description",
+            "imageUrl": "$imageUrl",
+            "score": {$ifNull: [{$first: "$reviews.avg"}, 0]},
+            "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]}
+        }}
+    ]);
+    return destinations;
+}
+
+
+
 module.exports.getTopRated = getTopRated;
 module.exports.getById = getById;
+module.exports.filterDestinations = filter;
