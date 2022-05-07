@@ -49,10 +49,10 @@ router.post("/destination/", async (req, res) => {
     let filePath = "";
     if(file != undefined){
         let ext = file.originalname.substring(file.originalname.lastIndexOf("."), file.originalname.length);
-        fs.rename(file.path, "./public/images/" + normalizedName + ext, (err) => {
+        fs.rename(file.path, "./public/images/" + normalizedName + "_" + file.filename.substr(0, 10) + ext, (err) => {
             throw err;
         });
-        filePath = "images/" + normalizedName + ext;
+        filePath = "images/" + normalizedName + "_" + file.filename.substr(0, 10) + ext;
     }
 
     let categories = [];
@@ -74,10 +74,10 @@ router.put("/destination/", async (req, res) => {
     let filePath = "";
     if(file != undefined){
         let ext = file.originalname.substring(file.originalname.lastIndexOf("."), file.originalname.length);
-        fs.rename(file.path, "./public/images/" + normalizedName + ext, (err) => {
+        fs.rename(file.path, "./public/images/" + normalizedName + "_" + file.filename.substr(0, 10) + ext, (err) => {
             throw err;
         });
-        filePath = "images/" + normalizedName + ext;
+        filePath = "images/" + normalizedName + "_" + file.filename.substr(0, 10) + ext;
     }
 
     let categories = [];
