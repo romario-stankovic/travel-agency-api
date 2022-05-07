@@ -24,7 +24,8 @@ async function getTopRated(){
             "description": "$description",
             "imageUrl": "$imageUrl",
             "score": {$ifNull: [{$first: "$reviews.avg"}, 0]},
-            "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]}
+            "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]},
+            "categories": "$categories"
         }},
         {$sort: {score: -1, ratings: -1}},
         {$limit: 3}
@@ -58,10 +59,39 @@ async function getById(id){
             "description": "$description",
             "imageUrl": "$imageUrl",
             "score": {$ifNull: [{$first: "$reviews.avg"}, 0]},
-            "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]}
+            "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]},
+            "categories": "$categories"
         }}
     ]);
     return destination[0];
+}
+
+async function getAll(){
+    let destinations = await model.aggregate([
+        {$lookup: {
+            from: "reviews",
+            localField: "_id",
+            foreignField: "destinationId",
+            as: "reviews",
+            pipeline:[
+                {$group: {
+                    "_id": "temp",
+                    "count": {$count: {}},
+                    "avg": {$avg:"$score"}
+                }}
+            ]
+        }},
+        {$project: {
+            "_id": "$_id",
+            "name": "$name",
+            "description": "$description",
+            "imageUrl": "$imageUrl",
+            "score": {$ifNull: [{$first: "$reviews.avg"}, 0]},
+            "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]},
+            "categories": "$categories"
+        }}
+    ])
+    return destinations;
 }
 
 async function filter(filters){
@@ -86,7 +116,8 @@ async function filter(filters){
                 "description": "$description",
                 "imageUrl": "$imageUrl",
                 "score": {$ifNull: [{$first: "$reviews.avg"}, 0]},
-                "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]}
+                "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]},
+                "categories": "$categories"
             }},
             {$limit: 10}
         ])
@@ -114,14 +145,43 @@ async function filter(filters){
             "description": "$description",
             "imageUrl": "$imageUrl",
             "score": {$ifNull: [{$first: "$reviews.avg"}, 0]},
-            "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]}
+            "ratings": {$ifNull: [{$first: "$reviews.count"}, 0]},
+            "categories": "$categories"
         }}
     ]);
     return destinations;
 }
 
+async function add(name, description, imageUrl, categories){
+    return await model.create({
+        name: name,
+        description: description,
+        imageUrl: imageUrl,
+        categories: categories
+    });
+}
 
+async function update(id, name, description, imageUrl, categories){
+    let dest = await getById(id);
+    return await model.findByIdAndUpdate(id, {
+        name: name,
+        description: description,
+        imageUrl: imageUrl !== "" ? imageUrl : dest.imageUrl,
+        categories: categories
+    });
+}
+
+async function remove(id) {
+    if(!mongoose.isValidObjectId(id)){
+        return null;
+    }
+    return await model.findByIdAndDelete(id);
+}
 
 module.exports.getTopRated = getTopRated;
 module.exports.getById = getById;
+module.exports.getAll = getAll;
 module.exports.filterDestinations = filter;
+module.exports.add = add;
+module.exports.update = update;
+module.exports.delete = remove;

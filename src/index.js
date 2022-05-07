@@ -1,7 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const multer = require("multer");
 const bodyParser = require("body-parser");
+const fileParser = multer({dest: "./public/uploads"});
 
 const userController = require("./controllers/user.controller").controller;
 const destinationController = require("./controllers/destination.controller").controller;
@@ -21,8 +23,10 @@ async function main() {
     const app = express();
     app.use(cors());
     app.use(express.static(__dirname + "/../public/"));
+
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
+    app.use(fileParser.any());
 
     app.use(userController);
     app.use(destinationController);
