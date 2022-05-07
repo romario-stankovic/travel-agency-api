@@ -22,6 +22,15 @@ router.get("/motd/", async (req, res) => {
     }
 });
 
+router.get("/motd/all", async (req, res) => {
+    let motds = await motdService.getAll();
+    if(motds.length === 0){
+        res.json(apiResponse.NULL_ENTRY);
+    }else{
+        res.json(motds);
+    }
+});
+
 router.post("/motd/", async (req, res) => {
     let motd = await motdService.add(req.body.message);
     if (motd == undefined) {
@@ -45,7 +54,7 @@ router.delete("/motd/", async (req, res) => {
     if (motd == undefined) {
         res.json(apiResponse.DELETE_FAILED);
     } else {
-        res.json(apiResponse.OK);
+        res.json(motd);
     }
 });
 

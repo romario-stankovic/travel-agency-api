@@ -13,6 +13,15 @@ router.get("/user/", async (req, res) => {
     }
 })
 
+router.get("/user/all", async (req, res) => {
+    let users = await userService.getAll();
+    if(users.length === 0){
+        res.json(apiResponse.NULL_ENTRY);
+    }else{
+        res.json(users);
+    }
+})
+
 router.post("/user/", async(req, res) => {
     let user = await userService.create(req.body.name, req.body.lastName, req.body.email, req.body.password);
     if(user == undefined){

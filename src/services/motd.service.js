@@ -19,6 +19,10 @@ async function getById(id){
     return await model.findById(id);
 }
 
+async function getAll(){
+    return await model.find();
+}
+
 async function add(message) {
     return await model.create({message: message});
 }
@@ -39,6 +43,7 @@ async function remove(id){
 
 module.exports.getRandom = getRandom;
 module.exports.getById = getById;
+module.exports.getAll = getAll;
 module.exports.add = add;
 module.exports.update = update;
 module.exports.delete = remove;
