@@ -30,7 +30,7 @@ router.post("/booking/", async (req, res) => {
         res.json(apiResponse.CREATE_FAILED);
         return;
     }
-    let booking = await bookingService.add(req.body.userId, req.body.destinationId, req.body.date, req.body.days);
+    let booking = await bookingService.add(req.body.userId, req.body.destinationId, req.body.start, req.body.end);
     if(booking == undefined){
         res.json(apiResponse.CREATE_FAILED);
     }else{

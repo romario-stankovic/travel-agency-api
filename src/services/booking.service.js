@@ -14,12 +14,12 @@ async function getById(id){
     return await model.findById(id);
 }
 
-async function add(userId, destinationId, date, days){
+async function add(userId, destinationId, start, end){
     return await model.create({
         userId: userId,
         destinationId: destinationId,
-        date: date,
-        days: days
+        start: start,
+        end: end
     });
 }
 
