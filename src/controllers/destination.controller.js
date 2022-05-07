@@ -43,8 +43,8 @@ router.post("/destination/filter", async (req, res) => {
 })
 
 router.post("/destination/", async (req, res) => {
+
     let normalizedName = req.body.name.toLowerCase().replace(" ", "_");
-    
     let file = req.files[0];
     let filePath = "";
     if(file != undefined){
@@ -81,8 +81,10 @@ router.put("/destination/", async (req, res) => {
     }
 
     let categories = [];
-    categories.push(normalizedName);
-    categories.push(...req.body.categories.split(";"));
+    categories.push(normalizedName.trim());
+    categories.push(...req.body.categories.split(";").map(cat => {
+        return cat.trim();
+    }));
 
     let destination = await destinationService.update(req.query.id, req.body.name, req.body.description, filePath, categories);
     if(destination == undefined){
@@ -113,10 +115,12 @@ router.get("/destination/review", async (req, res) => {
 router.post("/destination/review", async (req, res) => {
     let user = await userService.getById(req.body.userId);
     let destination = await destinationService.getById(req.body.destinationId);
+
     if(user == undefined || destination == undefined){
         res.json(apiResponse.CREATE_FAILED);
         return;
     }
+
     let review = await reviewService.add(req.body.userId, req.body.destinationId, req.body.score, req.body.text);
     if(review == undefined){
         res.json(apiResponse.CREATE_FAILED);

@@ -162,13 +162,16 @@ async function add(name, description, imageUrl, categories){
 }
 
 async function update(id, name, description, imageUrl, categories){
+    if(!mongoose.isValidObjectId(id)){
+        return null;
+    }
     let dest = await getById(id);
     return await model.findByIdAndUpdate(id, {
         name: name,
         description: description,
         imageUrl: imageUrl !== "" ? imageUrl : dest.imageUrl,
         categories: categories
-    });
+    }, {new: true});
 }
 
 async function remove(id) {
