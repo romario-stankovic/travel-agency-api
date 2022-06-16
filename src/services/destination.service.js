@@ -166,10 +166,13 @@ async function update(id, name, description, imageUrl, categories){
         return null;
     }
     let dest = await getById(id);
+    if(dest == undefined){
+        return null;
+    }
     return await model.findByIdAndUpdate(id, {
         name: name,
         description: description,
-        imageUrl: imageUrl !== "" ? imageUrl : dest.imageUrl,
+        imageUrl: (imageUrl !== "" ? imageUrl : dest.imageUrl),
         categories: categories
     }, {new: true});
 }

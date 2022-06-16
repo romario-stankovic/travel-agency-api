@@ -23,11 +23,16 @@ router.get("/user/all", async (req, res) => {
 })
 
 router.post("/user/", async(req, res) => {
-    let user = await userService.create(req.body.name, req.body.lastName, req.body.email, req.body.password);
-    if(user == undefined){
+    let user = await userService.getByEmail(req.body.email);
+    if(user != undefined) {
         res.json(apiResponse.USER_EXISTS);
+        return;
+    }
+    let newUser = await userService.create(req.body.name, req.body.lastName, req.body.email, req.body.password);
+    if(newUser == undefined){
+        res.json(apiResponse.CREATE_FAILED);
     }else{
-        res.json(user);
+        res.json(newUser);
     }
 });
 
