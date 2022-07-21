@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const bodyParser = require("body-parser");
 const fileParser = multer({dest: "./public/uploads"});
+const fs = require("fs");
 
 const userController = require("./controllers/user.controller").controller;
 const destinationController = require("./controllers/destination.controller").controller;
@@ -19,6 +20,10 @@ async function main() {
 
     await mongoose.connect("mongodb://127.0.0.1:27017/globus");
     mongoose.set("autoCreate", false);
+
+    if(!fs.existsSync("./public/images")) {
+        fs.mkdirSync("./public/images", {recursive: true});
+    }
 
     const app = express();
     app.use(cors());
