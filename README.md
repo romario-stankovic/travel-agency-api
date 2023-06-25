@@ -1,13 +1,11 @@
 <h1 align="center">Travel Agency API</h1>
 
-This project was given as a final exam for "Web Programming" at Singidunum University. The goal of this course was to teach students about how RESTful APIs work and how to develop a full stack application using Angular and Express.
+"Travel Agency" is a final exam project from the "Web Programming" course at Singidunum University. The course was designed to teach students how to develop and deploy a full stack applications using the MEAN stack (MongoDB, Express, Angular, NodeJS). To combine all the knowledge gained during the course, students were tasked with creating a full stack application on the topic of a "Travel Agency Website" where users can browse and book different destinations. The frontend site had to be built using Angular 12 or newer, while the backend had to be an Express application that allows various CRUD operations over a MongoDB database.
 
 The project is split into two repositories:
 
-- [Frontend](https://github.com/Romario-Stankovic/TravelAgency)
+- [Frontend](https://github.com/Romario-Stankovic/TravelAgency_Site)
 - [Backend](https://github.com/Romario-Stankovic/TravelAgency_API)
-
-The theme for the project was "Travel Agency" and the web application had to be built using Angular 12 or 13, while the backend had to use NodeJS with Express to allow for CRUD operations over a Mongo database.
 
 ## 💡 Features
 
